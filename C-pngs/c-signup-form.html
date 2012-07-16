@@ -1,0 +1,183 @@
+<style type="text/css">
+.control-group {
+    margin-bottom: 1px;
+}
+</style>
+<form action="javascript:void(0);" method="post" id="form" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="first_name"><em>*</em>&nbsp;First Name</label>
+    <div class="controls">
+      <input name="first_name" id="first_name" type="text" placeholder="First Name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="last_name"><em>*</em>&nbsp;Last Name</label>
+    <div class="controls">
+      <input name="last_name" id="last_name" type="text" placeholder="Last Name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"  for="email1"><em>*</em>&nbsp;Email Address</label>
+    <div class="controls">
+      <input name="email1" id="email1" type="text" placeholder="Email Address" />
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"  for="email2"><em>*</em>&nbsp;Confirm Email</label>
+    <div class="controls">
+      <input name="email2" id="email2" type="text" placeholder="Confirm Email"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="zip_code"><em>*</em>&nbsp;Zip Code</label>
+    <div class="controls">
+      <input name="zip_code" id="zip_code" type="text" placeholder="Zip code" size="5" style="display:inline"/>&nbsp;<button type="submit" class="btn btn-primary" style="display:inline;">SIGN THE PETITION</button>
+    </div>
+  </div>
+  
+    <div class="control-group">
+    <label class="control-label" for="optionsCheckbox"><em>*</em></label>
+    <div class="controls">
+      <label class="checkbox">
+      <input type="checkbox" id="optionsCheckbox" name="optionsCheckbox" value="option1">
+      By signing, you accept Hyundai's <a class="btn1" data-toggle="modal" href="#myModal" >privacy policy</a>.</label>
+    </div>
+  </div>
+
+</form>
+<div class="modal hide" id="myModal"></div>
+<script>
+$(document).ready(function() {
+	$('a.btn1[href="#myModal"]').click(function(e) {
+		e.preventDefault();
+		$('#myModal').load('./consent.html').show();
+		return false;
+	});
+
+	var finfo = {};
+	var validator = $('#form').validate({
+		rules: {
+			first_name: "required",
+			last_name: "required",
+			email1: { required: true, email: true },
+			email2: { required: true, email: true, equalTo: "#email1" },
+			zip_code: { required:true, minlength: 5 },
+			optionsCheckbox: {required: true}
+		},
+		messages: {
+			first_name: "",
+			last_name: "",
+			email1: "",
+			email2: "",
+			zip_code: "",
+			optionsCheckbox: ''
+		},
+		
+		highlight:function(element, errorClass, validClass) {
+		  $(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+		  $(element).parents('.control-group').removeClass('error');
+		  $(element).parents('.control-group').addClass('success');
+		}
+	});
+
+	$('#img_r3').live('click', function(e) {
+		e.preventDefault();
+		var len = signup_ary.length;
+		if(current_no >= (len-1)) {
+			current_no = 0;
+		}
+		else {
+			current_no ++;
+		}
+		console.log('+++++++++' + current_no);
+		$('div.finfo', '#div3').empty().remove();
+		bottom_display(signup_ary[current_no], count_no-current_no, 'finfo', '#div3');
+
+		return false;
+	});
+
+	$('#img_l3').live('click', function(e) {
+		e.preventDefault();
+		var len = signup_ary.length;
+		if(current_no<=0) {
+			current_no = len-1;
+		}
+		else {
+			current_no --;
+		}
+		console.log('--------' + current_no);
+		$('div.finfo', '#div3').empty().remove();
+		bottom_display(signup_ary[current_no], count_no-current_no, 'finfo', '#div3');
+
+		return false;
+	})
+
+	$('#form').submit(function(e) {
+		e.preventDefault();
+		
+		if(!validator.form()) {
+			return false;
+		}
+
+		finfo.name = $.trim($('#first_name').val()) + ' ' + $('#last_name').val().substr(0,1).toUpperCase();
+		finfo.zip = $.trim($('#zip_code').val());
+		finfo.date = get_date();
+
+		var obj = {};	
+		obj.firstName = $("#first_name").val();
+		obj.lastName = $("#last_name").val();
+		obj.emailAddress = $("#email1").val();
+		obj.confirmEmail = $("#email2").val();
+		obj.postalCode = $("#zip_code").val();
+		obj.consent =  "true";
+		
+		console.log('----------------------------');
+		console.log(obj);
+		console.log(obj.firstName + ', ' + obj.lastName + ', ' + obj.emailAddress + ', ' + obj.confirmEmail + ', ' + obj.consent);
+		postData(obj.firstName,obj.lastName,obj.emailAddress,obj.confirmEmail,obj.postalCode,obj.consent);
+
+		$('#div2, #div1').hide();
+		$('#div3').show();
+		$('<a></a>')
+			.addClass('switch1')
+			.html('<img src="./icons/close.png" border="0" width="30" height="30" />')
+			.attr({'href': 'javascript:void(0);',
+			'title': 'Return to home page'})
+			.appendTo('#div3');
+
+		bottom_display(finfo, count_no+1, 'finfo', '#div3');
+		
+		$('<span></span>').addClass('digital').appendTo('#div3');
+
+		$('span.digital', '#div3').html(count_no).show();
+
+		signup_ary.push(finfo);
+		
+		count_no ++;
+		
+		$('<span></span>').addClass('digital').appendTo('#div3');
+		$('span.digital', '#div3').html(count_no).show();
+
+		len = signup_ary.length;
+		
+		//top_display(signup_ary[len-1], count_no, 'top1', '#div3');
+		current_no = 1;
+
+		return false;
+	});
+	
+  function postForm() {
+	var firstName = $("#first_name").val();
+	var lastName = $("#last_name").val();
+	var emailAddress = $("#email1").val();
+	var confirmEmail = $("#email2").val();
+	var postalCode = $("#zip_code").val();
+	var consent =  "true";
+	
+	postData(firstName,lastName,emailAddress,confirmEmail,postalCode,consent);
+  }
+
+});
+</script>

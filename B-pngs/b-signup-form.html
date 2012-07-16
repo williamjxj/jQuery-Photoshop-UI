@@ -1,0 +1,222 @@
+<form action="javascript:void(0);" method="post" id="form" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="first_name"><em>*</em>&nbsp;First Name</label>
+    <div class="controls">
+      <input name="first_name" id="first_name" type="text" placeholder="First Name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="last_name"><em>*</em>&nbsp;Last Name</label>
+    <div class="controls">
+      <input name="last_name" id="last_name" type="text" placeholder="Last Name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"  for="email1"><em>*</em>&nbsp;Email Address</label>
+    <div class="controls">
+      <input name="email1" id="email1" type="text" placeholder="Email Address" />
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"  for="email2"><em>*</em>&nbsp;Confirm Email</label>
+    <div class="controls">
+      <input name="email2" id="email2" type="text" placeholder="Confirm Email"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="zip_code"><em>*</em>&nbsp;Zip Code</label>
+    <div class="controls">
+      <input name="zip_code" id="zip_code" type="text" placeholder="Zip code"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="optionsCheckbox"><em>*</em></label>
+    <div class="controls">
+      <label class="checkbox">
+      <input type="checkbox" id="optionsCheckbox" name="optionsCheckbox" value="option1">
+      By signing, you accept Hyundai's <a class="btn1" data-toggle="modal" href="#myModal" >privacy policy</a>.</label>
+    </div>
+  </div>
+  <div class="control-group">
+    <div align="center" style="padding-top:0;">
+      <button type="submit" class="btn btn-primary">SIGN THE PETITION HERE</button>
+      <!--button type="reset" class="btn btn-success" id="reset">Reset</button-->
+    </div>
+  </div>
+</form>
+<div class="modal hide" id="myModal"></div>
+<script>
+$(document).ready(function() {
+	$('a.btn1[href="#myModal"]').click(function(e) {
+		e.preventDefault();
+		$('#myModal').load('./consent.html').show();
+		return false;
+	});
+
+
+	var finfo = {};
+	var validator = $('#form').validate({
+		rules: {
+			first_name: "required",
+			last_name: "required",
+			email1: { required: true, email: true },
+			email2: { required: true, email: true, equalTo: "#email1" },
+			zip_code: { required:true, minlength: 5 },
+			optionsCheckbox: {required: true}
+		},
+		messages: {
+			first_name: "",
+			last_name: "",
+			email1: "",
+			email2: "",
+			zip_code: "",
+			optionsCheckbox: ''
+		},
+		
+		highlight:function(element, errorClass, validClass) {
+		  $(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+		  $(element).parents('.control-group').removeClass('error');
+		  $(element).parents('.control-group').addClass('success');
+		}
+	});
+	/*
+	$('#reset').click(function() {
+        $('div.control-group').removeClass('error success');
+		validator.resetForm();
+		return true;
+    });
+	*/
+	$('#img_rb').live('click', function(e) {
+		e.preventDefault();
+		var len = signup_ary.length;
+		if(current_no >= (len-1)) {
+			current_no = 0;
+		}
+		else {
+			current_no ++;
+		}
+		console.log('+++++++++' + current_no);
+		$('div.finfo', 'div.item.active').empty().remove();
+		bottom_display_1(signup_ary[current_no], count_no-current_no, 'finfo');
+
+		return false;
+	});
+
+	$('#img_lb').live('click', function(e) {
+		e.preventDefault();
+		var len = signup_ary.length;
+		if(current_no<=0) {
+			current_no = len-1;
+		}
+		else {
+			current_no --;
+		}
+		console.log('--------' + current_no);
+		$('div.finfo', 'div.item.active').empty().remove();
+		bottom_display_1(signup_ary[current_no], count_no-current_no, 'finfo');
+
+		return false;
+	})
+
+	$('#form').submit(function(e) {
+		e.preventDefault();
+		
+		if(!validator.form()) {
+			return false;
+		}
+
+		finfo.name = $.trim($('#first_name').val()) + ' ' + $('#last_name').val().substr(0,1).toUpperCase();
+		finfo.zip = $.trim($('#zip_code').val());
+		finfo.date = get_date();
+
+		var obj = {};	
+		obj.firstName = $("#first_name").val();
+		obj.lastName = $("#last_name").val();
+		obj.emailAddress = $("#email1").val();
+		obj.confirmEmail = $("#email2").val();
+		obj.postalCode = $("#zip_code").val();
+		obj.consent =  "true";
+		
+		console.log('----------------------------');
+		console.log(obj);
+		console.log(obj.firstName + ', ' + obj.lastName + ', ' + obj.emailAddress + ', ' + obj.confirmEmail + ', ' + obj.consent);
+		postData(obj.firstName,obj.lastName,obj.emailAddress,obj.confirmEmail,obj.postalCode,obj.consent);
+
+		if($('div.active.item').length>0) {
+			// $('div.active.item').length should be 1.
+			$('div.active.item')
+				.empty()
+				.css({
+					'width': '300px',
+					'height': '600px',
+					'background-image':'url(./B-pngs/bd_nocontent.png)',
+					'background-repeat' : 'no-repeat'
+				})
+				.show();
+
+			$('<a></a>')
+				.addClass('switch1')
+				.html('<img src="./icons/close.png" border="0" width="30" height="30" />')
+				.attr({'href': 'javascript:void(0);',
+				'title': 'Return to home page'})
+				.appendTo('div.active.item');
+
+			///////////////
+			bottom_display_1(finfo, count_no+1, 'finfo');
+			
+			$('<span></span>').addClass('digital').appendTo('div.active.item');
+	
+			$('span.digital', 'div.active.item').html(count_no).show();
+		}
+		else {
+			alert('There is some problem.');
+		}
+
+		$('<a></a>').attr({
+			'id': 'img_rb',
+			'href': 'javascript:void(0);'
+		})
+		.append('<img src="./icons/right.png" class="imgp5" border="0" />')
+		.appendTo('div.active.item');
+		$('<a></a>').attr({
+			'id': 'img_lb',
+			'href': 'javascript:void(0);'
+		})
+		.append('<img src="./icons/left.png" class="imgp6" border="0" />')
+		.appendTo('div.active.item');
+
+		$('<img/>').attr({
+			'src':"./icons/no.png",
+			'class': "imgp10",
+			'border': "0"
+		})
+		.appendTo('div.active.item');
+
+		signup_ary.push(finfo);
+		
+		count_no ++;
+		
+		$('<span></span>').addClass('digital').appendTo('div.active.item');
+
+		$('span.digital', 'div.active.item').html(count_no).show();
+		
+		// postForm();
+
+		return false;
+	});
+
+  function postForm() {
+	var firstName = $("#first_name").val();
+	var lastName = $("#last_name").val();
+	var emailAddress = $("#email1").val();
+	var confirmEmail = $("#email2").val();
+	var postalCode = $("#zip_code").val();
+	var consent =  "true";
+	
+	postData(firstName,lastName,emailAddress,confirmEmail,postalCode,consent);
+  }
+
+});
+</script>

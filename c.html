@@ -1,0 +1,220 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0;" />
+<meta name="HandheldFriendly" content="true" />
+<title>HyundaiEPA</title>
+<script type="text/javascript">
+	var pkBaseURL = (("https:" == document.location.protocol) ? "https://reports.getclevermedia.net/" : "http://reports.getclevermedia.net/");
+	document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 5);
+	piwikTracker.trackPageView();
+} catch( err ) {}
+</script>
+<script type="text/javascript" src="http://dev.mashup.getclevermedia.net:9775/services/admin/HyundaiEPA?wsdl2form&contentType=text/javascript&resource=js/WSRequest.js"></script>
+<script type="text/javascript" src="http://dev.mashup.getclevermedia.net:9775/services/admin/HyundaiEPA?stub"></script>
+<script>services["admin/HyundaiEPA"].$.proxyAddress = "http://dev.mashup.getclevermedia.net:9775/carbon/admin/jsp/WSRequestXSSproxy_ajaxprocessor.jsp";</script>
+<!------------------------->
+<link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="./C-pngs/c-pngs.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="./bootstrap/js/bootstrap.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="./common.js" type="text/javascript"></script>
+<div class="span9 columns" style="width:728px">
+  <div class="active item" id="div1"> <img src="./C-pngs/a.png" border="0" title="Expand to Sign The Petition" usemap="#signupmap"/>
+    <map name="signupmap">
+      <area shape="rect" coords="472,50,728,90" href="javascript:void(0);" alt="" id="img_b" />
+    </map>
+    <span class="digital0"></span> </div>
+  <div class="item" id="div2" style="display:none;"> <img src="./C-pngs/b.png" border="0" title="Form to Sign The Petition" usemap="#formmap"/>
+    <map name="formmap">
+      <area shape="rect" coords="362,90,387,167" href="javascript:void(0);" alt="" id="img_l2" />
+      <area shape="rect" coords="703,90,928,167" href="javascript:void(0);" alt="" id="img_r2" />
+    </map>
+  </div>
+  <div class="item" id="div3" style="display:none;"> <img src="./C-pngs/c.png" border="0" title="List" usemap="#listmap"/>
+    <map name="listmap">
+      <area shape="rect" coords="362,90,387,167" href="javascript:void(0);" alt="" id="img_l3" />
+      <area shape="rect" coords="703,90,928,167" href="javascript:void(0);" alt="" id="img_r3" />
+    </map>
+  </div>
+</div>
+<script type="text/javascript">
+var count_no = 0;
+var current_no = 0;
+var signup_ary = new Array();
+
+  function getData() {
+
+	var data = services["admin/HyundaiEPA"].operations["retrieveTopFuelRegistrationsJSON"];
+	var payload = null;
+
+	data.callback = function(payload) {
+		var responseXML = WSRequest.util._serializeToString(payload);
+		var responseJSON = WebService.utils.xml2bf(payload);
+		var htmlContent = responseJSON["ws:retrieveTopFuelRegistrationsJSONResponse"]["return"].$;
+		
+		var jdata = eval("(" + htmlContent + ')');
+
+		dt = jdata.FuelRegistrations;
+		
+		for (n in dt) {
+			// console.log(n + ' => ' + dt[n].EmailAddress);
+			signup_ary.push({
+				'name': dt[n].FirstName + ' ' + dt[n].LastName.substr(0,1).toUpperCase(),
+				'zip': dt[n].PostalCode,
+				'date': get_date(dt[n].InsertedDate.replace(/^.*\(/, '').replace(/\).*$/, ''))
+			});
+		}
+
+		//console.log(signup_ary);
+		len = signup_ary.length;
+		
+		top_display(signup_ary[len-1], count_no, 'top1', '#div2');
+		top_display(signup_ary[len-2], count_no-1, 'top2', '#div2');
+		current_no = 2;
+	};
+	data(payload);
+  }
+
+  function getCount() {
+
+	var count = services["admin/HyundaiEPA"].operations["retrieveFuelRegistrationCount"];
+	var payload = null;
+
+	count.callback = function(payload) {
+		var responseXML = WSRequest.util._serializeToString(payload);
+		var responseJSON = WebService.utils.xml2bf(payload);
+		var htmlContent = responseJSON["ws:retrieveFuelRegistrationCountResponse"]["return"].$;
+
+		count_no = htmlContent; //66
+		$('span.digital0').html(count_no);
+	};
+	count(payload);
+  }
+
+
+  function postData(firstName,lastName,emailAddress,confirmEmail,postalCode,consent) {
+
+	if ((firstName != "") && (lastName != "") && (emailAddress != "") && (emailAddress == confirmEmail) && (postalCode != "") && (consent != "")) {
+
+	  var data = services["admin/HyundaiEPA"].operations["saveFuelRegistrationJSON"];
+	  var payload = "<saveFuelRegistrationJSON><firstName>"+firstName+"</firstName><lastName>"+lastName+"</lastName><emailAddress>"+emailAddress+"</emailAddress><confirmEmail>"+confirmEmail+"</confirmEmail><zipCode>"+postalCode+"</zipCode><optIn>"+consent+"</optIn></saveFuelRegistrationJSON>";
+
+	  data.callback = function(payload) {
+
+		var responseXML = WSRequest.util._serializeToString(payload);
+		var responseJSON = WebService.utils.xml2bf(payload);
+		var htmlContent = responseJSON["ws:saveFuelRegistrationJSONResponse"]["return"].$;
+		var jsonContent = eval("("+htmlContent+")");
+		var success = jsonContent.Result.Success;
+
+		if (success) {
+			var trackName = "http://reports.getclevermedia.net/Sign";
+			piwikTracker.trackLink(trackName,'link');
+			getCount();
+		}
+	};
+
+	data(payload);
+	}	
+  }
+
+  function postForm() {
+	var firstName = $("#first_name").val();
+	var lastName = $("#last_name").val();
+	var emailAddress = $("#email1").val();
+	var confirmEmail = $("#email2").val();
+	var postalCode = $("#zip_code").val();
+	var consent =  "true";
+	
+	postData(firstName,lastName,emailAddress,confirmEmail,postalCode,consent);
+  }
+
+  /////////////////////////////////////////
+
+$(document).ready(function() {	
+	
+	getCount();
+	getData();
+
+	$('.carousel').carousel();
+
+
+	$('#img_b').click(function(e) {
+		e.preventDefault();
+		var this_item = $('#div2');
+		$('#div1, #div3').hide();
+		$('#div2').show();
+
+		// add form.
+		if(! this_item.find('div#container').length) {
+			$('<div></div>').attr('id', 'container').appendTo(this_item);
+		}
+
+		$('<a></a>')
+			.addClass('switch1')
+			.html('<img src="./icons/close.png" border="0" width="30" height="30" />')
+			.attr({'href': 'javascript:void(0);',
+			'title': 'Return to home page'})
+			.appendTo(this_item);		
+		
+		$('div#container')
+			.load('./C-pngs/c-signup-form.html')
+			.animate({opacity: 1}, 1000);
+		
+		//if(! ('span.digital').length)
+		$('<span></span>').addClass('digital').appendTo(this_item);
+		
+		$('span.digital', this_item).html(count_no).show();
+
+		return false;
+	});
+
+	$('#img_r2').live('click', function(e) {
+		e.preventDefault();
+
+		console.log('===========' + current_no + ', ' + count_no-current_no);
+		var len = signup_ary.length;
+		if(current_no<0) {
+			current_no = len-1;
+		}
+		$('div.top2', '#div2').empty().remove();
+		$('div.top1', '#div2').removeClass('top1').addClass('top2');
+
+		console.log(signup_ary);
+		top_display(signup_ary[current_no], count_no-len+current_no, 'top1', '#div2');
+		current_no --;
+
+		return false;
+	});
+
+	$('#img_l2').live('click', function(e) {
+		e.preventDefault();
+
+		var len = signup_ary.length;
+		if(current_no>=len) {
+			current_no = 0;
+		}
+		$('div.top1', '#div2').empty().remove();
+		$('div.top2', '#div2').empty().remove();
+		console.log(signup_ary);
+		console.log(current_no);
+		
+		top_display(signup_ary[current_no], count_no-current_no, 'top1', '#div2');
+		current_no ++;
+		top_display(signup_ary[current_no], count_no-current_no, 'top2', '#div2');
+		current_no++;
+
+		return false;
+	});
+	
+	$('a.switch1').live('click', function(e) {
+		//window.location.reload();
+		$('#div2, #div2').hide();
+		$('#div1').show();
+	});
+});
+</script>

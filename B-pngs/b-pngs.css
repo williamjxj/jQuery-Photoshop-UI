@@ -1,0 +1,138 @@
+.carousel-inner {
+	position: relative;
+}
+.imgp1 {
+	position: absolute;
+	left: 280px;
+	top:66px;
+}
+.imgp2 {
+	position: absolute;
+	left: 0px;
+	top:212px;
+}
+.imgp3 {
+	position: absolute;
+	left: 280px;
+	top: 50px;
+}
+.imgp4 {
+	position: absolute;
+	left: 0px;
+	top:66px;
+}
+.imgp5 {
+	position: absolute;
+	left: 280px;
+	top: 330px;
+}
+.imgp6 {
+	position: absolute;
+	left: 0px;
+	top: 330px;
+}
+.imgp10 {
+	position: absolute;
+	left: 0px;
+	top: 478px;
+}
+.digital {
+	position: absolute;
+	left: 200px;
+	top: 508px;
+	color: #006699;
+	font-size:52px;
+	font-weight: bolder;
+	display: inline;
+	padding-left: 10px;
+	padding-right:10px;
+	/*
+	word-spacing: 4px;
+	overflow:hidden;
+	*/
+}
+#container {
+	position: absolute;
+	left:0px;
+	top:230px;
+	width: 300px;
+	z-index:20;
+	/*
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	-moz-box-shadow: 0 8px 6px -6px black;
+	box-shadow: 0 4px 6px -6px black;*/
+}
+input[type="text"], input[type="email"] {
+	height: auto; !important
+}
+.name,
+.zip,
+.date,
+.count {
+	font:Verdana, Arial, Helvetica, sans-serif;
+	text-align: left;
+	font-size: 16px;
+	color:#3333FF;
+	margin: 6px;
+}
+.name {
+	font-size:20px;
+	font-weight:bolder;
+}
+.top1 {
+	position: absolute;
+	padding-left: 12px;
+	text-align:center;
+	left: 10px;
+	top:54px;
+	width:170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+}
+.top2 {
+	position: absolute;
+	padding-left: 16px;
+	left: 190px;
+	top: 54px;
+	width: 170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+}
+.finfo{
+	position: absolute;
+	left: 90px;
+	top:322px;
+	width:170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+}
+.top3 {
+	position: absolute;
+	padding-left: 12px;
+	text-align:center;
+	left: 10px;
+	top:38px;
+	width:170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+}
+.top4 {
+	position: absolute;
+	padding-left: 12px;
+	left: 196px;
+	top: 38px;
+	width: 70px;
+	height:90px;
+	overflow:hidden;
+	display:inline;
+}
+.switch1 {
+	position: absolute;
+	left: 260px;
+	top:180px;
+	z-index: 2;
+}

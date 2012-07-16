@@ -1,0 +1,132 @@
+.span9 {
+	position: relative;
+}
+.imgp1 {
+	position: absolute;
+	left: 280px;
+	top:280px;
+}
+.imgp2 {
+	position: absolute;
+	left: 0px;
+	top:440px;
+}
+.imgp3 {
+	position: absolute;
+	left: 150px;
+	top:410px;
+}
+.imgp4 {
+	position: absolute;
+	left: 0px;
+	top:280px;
+}
+.imgp5 {
+	position: absolute;
+	left: 280px;
+	top: 330px;
+}
+.imgp6 {
+	position: absolute;
+	left: 0px;
+	top: 330px;
+}
+.imgp7{
+	position: absolute;
+	left: 280px;
+	top:262px;
+}
+.imgp8 {
+	position: absolute;
+	left: 0px;
+	top: 438px;
+}
+.imgp10 {
+	position: absolute;
+	left: 0px;
+	top: 478px;
+}
+.digital0 {
+	position: absolute;
+	left: 660px;
+	top: 14px;
+	color: #006699;
+	font-size:52px;
+	font-weight: bolder;
+	display: inline;
+}
+.digital {
+	position: absolute;
+	left: 660px;
+	top: 234px;
+	color: #006699;
+	font-size:52px;
+	font-weight: bolder;
+	display: inline;
+}
+#container {
+	position: absolute;
+	left:0px;
+	top:50px;
+	width:350px;
+}
+input[type="text"], input[type="email"] {
+	height: auto; !important
+}
+.name,
+.zip,
+.date,
+.count {
+	font:Verdana, Arial, Helvetica, sans-serif;
+	text-align: left;
+	font-size: 16px;
+	color:#3333FF;
+	margin: 6px;
+}
+.name {
+	font-size:20px;
+	font-weight:bolder;
+}
+.top1 {
+	position: absolute;
+	padding-left: 12px;
+	text-align:center;
+	left: 410px;
+	top:74px;
+	width:170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+	z-index:10;
+}
+.top2 {
+	position: absolute;
+	padding-left: 12px;
+	left: 594px;
+	top: 74px;
+	width: 108px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+	z-index:10;
+}
+.finfo{
+	position: absolute;
+	padding-left: 12px;
+	left: 410px;
+	top: 72px;
+	width:170px;
+	height:110px;
+	overflow:hidden;
+	display:inline;
+	z-index:10;
+}
+label.error {
+	display:inline;
+}
+.switch1 {
+	position: absolute;
+	left: 660px;
+	top:10px;
+	z-index: 2;
+}

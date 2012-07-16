@@ -1,0 +1,32 @@
+<!--div class="modal hide" id="myModal"-->
+
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+  <h3>By signing, you accept Hyundai's privacy policy</h3>
+</div>
+<div class="modal-body">
+  <div id="privacyNotice" style="display: block; ">
+    <p>By signing this petition, you agree to Hyundai's terms of  use<br>
+      [<a href="http://www.hyundaiusa.com/terms-conditions.aspx" target="_blank">http://www.hyundaiusa.com/terms-conditions.aspx</a>]  and privacy policy <br>
+      [<a href="http://www.hyundaiusa.com/privacy-policy.aspx" target="_blank">http://www.hyundaiusa.com/privacy-policy.aspx</a>]. </p>
+    <p><strong>In addition</strong>, you  agree that we may use the information you provide in connection with this  petition in the following ways:</p>
+    <ul>
+      <li>To contact you regarding your support of the  petition (including but not limited to for verification purposes).</li>
+      <li>To disclose your information to government  representatives in connection with their possible support of the petition  (including but not limited to for verification purposes).</li>
+      <li>To disclose publicly your first name, the first  initial of your last name and your zip code to indicate your support of the  petition. </li>
+      <li>To send you email updates and special offers  from Hyundai, if you have signed up to receive them. </li>
+    </ul>
+  </div>
+</div>
+<div class="modal-footer"> <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a> </div>
+<!--/div-->
+<script>
+$(document).ready(function() {
+	$('button.close').click(function() {
+		$('#myModal').hide();
+	});
+	$('a', 'div.modal-footer').click(function() {
+		$('button.close').trigger('click');
+	});
+});
+</script>
